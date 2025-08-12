@@ -3,6 +3,8 @@ import 'package:flutter_clean_arch_test/core/di/app_locator.dart';
 import 'package:flutter_clean_arch_test/core/navigation/routes.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   // Setup dependecy Injection
   setupLocator();
 
