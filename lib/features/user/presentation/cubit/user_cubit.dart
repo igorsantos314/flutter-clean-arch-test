@@ -43,7 +43,7 @@ class UserCubit extends Cubit<UserState> {
     try {
       emit(UserLoading()); // 1. Emite estado de carregamento
       final user = await _userRepository.fetchUser(id); // 2. Chama o repositório
-      emit(UserLoaded(user)); // 3. Emite estado de sucesso com o usuário
+      //emit(UserLoaded(user)); // 3. Emite estado de sucesso com o usuário
     } catch (e) {
       emit(UserError(e.toString())); // 4. Emite estado de erro se algo falhar
     }
