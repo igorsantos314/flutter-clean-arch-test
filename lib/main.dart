@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_arch_test/core/di/app_locator.dart';
-import 'package:flutter_clean_arch_test/features/user/domain/repository/user_repository.dart';
-import 'package:flutter_clean_arch_test/features/user/presentation/cubit/user_cubit.dart';
-import 'package:flutter_clean_arch_test/features/user/presentation/pages/user_page.dart';
+import 'package:flutter_clean_arch_test/core/navigation/routes.dart';
 
 void main() async {
   // Setup dependecy Injection
@@ -17,12 +14,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: BlocProvider(
-        // Fornece uma instância do UserCubit para a árvore de widgets abaixo.
-        // O UserCubit é inicializado com a implementação real do repositório.
-        create: (context) => UserCubit(getIt.get<UserRepository>()),
-        child: const UserPage(),
+    return MaterialApp.router(
+      routerConfig: AppRoutes.routes,
+      title: 'Flutter Clean Architecture Test',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
     );
   }
