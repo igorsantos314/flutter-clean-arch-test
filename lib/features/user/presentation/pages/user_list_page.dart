@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_arch_test/core/di/app_locator.dart';
+import 'package:flutter_clean_arch_test/core/navigation/routes.dart';
 import 'package:flutter_clean_arch_test/features/user/domain/repository/user_repository.dart';
 import 'package:flutter_clean_arch_test/features/user/presentation/cubit/user_list_cubit.dart';
 import 'package:go_router/go_router.dart';
@@ -25,18 +24,17 @@ class UserListPageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userCubit = context.read<UserListCubit>();
+    userCubit.loadUsers();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Lista de Usuários')),
       body: BlocListener<UserListCubit, UserListState>(
         listener: (context, state) {
-          log('UserListCubit state: $state');
-
           if (state.shouldNavigateToAddUser) {
             // Dispara a navegação aqui
-            context.go(
-              '/manage_user',
-            ); // Exemplo: navega para a rota de adicionar usuário
+            context.push(
+              AppNavigation.addUserRoute,
+            );
 
             // É CRUCIAL resetar a flag no Cubit para evitar navegações repetidas
             context.read<UserListCubit>().navigateToUserAddCompleted();
@@ -47,6 +45,7 @@ class UserListPageContent extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.error?.message ?? 'Erro desconhecido'),
+                backgroundColor: Colors.red,
               ),
             );
           }
@@ -82,6 +81,13 @@ class UserListPageContent extends StatelessWidget {
                         return ListTile(
                           title: Text(user.name),
                           subtitle: Text(user.email),
+                          onTap: () {
+                            // Navega para a página de detalhes do usuário
+                            AppNavigation.navigateToMangeUserPage(
+                              context,
+                              userId: user.id.toString(),
+                            );
+                          },
                           // Você pode adicionar mais ações aqui como editar/excluir
                         );
                       },

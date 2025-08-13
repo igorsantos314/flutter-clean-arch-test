@@ -73,7 +73,7 @@ class UserListCubit extends Cubit<UserListState> {
   }
 
   void navigateToUserAddCompleted() {
-    emit(state.copyWith(isLoading: false));
+    emit(state.copyWith(isLoading: false, shouldNavigateToAddUser: false));
   }
 
   @override
