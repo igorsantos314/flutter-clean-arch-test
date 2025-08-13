@@ -102,4 +102,26 @@ class ManageUserCubit extends Cubit<ManageUserState> {
   void resetErrorStatus() {
     emit(state.copyWith(errorMessage: ""));
   }
+
+  void delete() {
+    if (_currentUserId == null) {
+      emit(state.copyWith(errorMessage: "User ID is null or empty"));
+      return;
+    }
+
+    _userRepository.deleteUser(_currentUserId.toString()).then((outcome) {
+      outcome.when(
+        success: (isDeleted) {
+          if (isDeleted == true) {
+            emit(state.copyWith(isSuccess: true, userId: null));
+          } else {
+            emit(state.copyWith(errorMessage: "Failed to delete user"));
+          }
+        },
+        failure: (error, message, stackTrace) {
+          emit(state.copyWith(errorMessage: error.message.toString()));
+        },
+      );
+    });
+  }
 }

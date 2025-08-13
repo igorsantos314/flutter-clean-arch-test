@@ -69,7 +69,7 @@ class _ManageUserPageContentState extends State<ManageUserPageContent> {
         listener: (context, state) {
           if (state.isSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Usuário salvo com sucesso!')),
+              SnackBar(content: Text('Sucesso!')),
             );
             manageUserCubit.resetSuccessState();
             context.pop();
@@ -86,6 +86,17 @@ class _ManageUserPageContentState extends State<ManageUserPageContent> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
+              if (widget.userId != null)
+                BlocSelector<ManageUserCubit, ManageUserState, String>(
+                  selector: (state) => state.userId ?? '',
+                  builder: (context, userId) {
+                    return Text(
+                      'ID do Usuário: $userId',
+                      style: const TextStyle(fontSize: 16.0),
+                    );
+                  },
+                ),
+              const SizedBox(height: 16.0),
               BlocSelector<ManageUserCubit, ManageUserState, String>(
                 selector: (state) => state.userName ?? '',
                 builder: (context, name) {
@@ -155,12 +166,22 @@ class _ManageUserPageContentState extends State<ManageUserPageContent> {
 
               ElevatedButton(onPressed: () { manageUserCubit.save(); }, child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
+                children: [
                   Icon(Icons.save),
                   SizedBox(width: 8.0),
-                  Text('Salvar'),
+                  Text(widget.userId == null ? "Salvar" : "Atualizar"),
                 ],
               )),
+
+              if (widget.userId != null)
+                ElevatedButton(onPressed: manageUserCubit.delete, child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(Icons.delete),
+                    SizedBox(width: 8.0),
+                    Text("Excluir Usuário"),
+                  ],
+                )),
             ],
           ),
         ),
